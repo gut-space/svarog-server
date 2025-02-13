@@ -90,10 +90,9 @@ def login():
         app.logger.info("Login successful for user %s" % form.username.data)
         login_user(u, remember=form.remember.data)
 
-        next_page = request.args.get("next")
-        if not next_page or url_parse(next_page).netloc != "":
-            next_page = url_for("index")
-        return redirect(next_page)
+        # User no longer can provide the redirection URL. Once logged in, it will always be
+        # redirected to main index.html page.
+        return redirect(url_for("index"))
 
     return render_template("login.html", form=form)
 

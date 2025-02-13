@@ -6,6 +6,7 @@ from app.pagination import use_pagination
 from math import floor
 from app.utils import strfdelta
 from flask_login import current_user
+from werkzeug.utils import secure_filename
 
 from tletools import TLE
 from astropy import units as u
@@ -148,7 +149,7 @@ def obs_delete(obs_id: ObservationId = None):
 
 def obs_delete_db_and_disk(repository: Repository, obs_id: ObservationId):
 
-    app.logger.info("About to delete observation %s and all its files" % obs_id)
+    app.logger.info(f"About to delete observation {obs_id} and all its files")
 
     # Step 1: Create a list of files to be deleted. There may be several products.
     products = repository.read_observation_files(obs_id)
@@ -167,13 +168,14 @@ def obs_delete_db_and_disk(repository: Repository, obs_id: ObservationId):
 
     status = []
     for f in files:
-        path = os.path.join(root, f[0])
+        f_safe = secure_filename(f[0])  # Let's sanitize the name a bit (no funny ../ allowed)
+        path = os.path.join(root, f_safe)
         app.logger.info("Trying to delete [%s]" % path)
         try:
             os.remove(path)
-            status.append("Deleted %s file %s." % (f[1], f[0]))
+            status.append(f"Deleted {f[1]} file {f_safe}.")
         except Exception as ex:
-            status.append("Failed to delete %s file: %s, reason: %s" % (f[1], path, repr(ex)))
+            status.append(f"Failed to delete {f[1]} file: {f_safe}, reason: {repr(ex)}.")
 
     # Step 4: delete entries in the db
     repository.delete_observation(obs_id)
