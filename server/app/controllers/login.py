@@ -5,7 +5,7 @@ from flask_login import current_user, login_user, logout_user, UserMixin, LoginM
 
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import InputRequired, Length
-from werkzeug.urls import url_parse
+from urllib.parse import urlparse
 from werkzeug.security import check_password_hash
 
 from app.repository import Repository, UserRole
@@ -91,7 +91,7 @@ def login():
         login_user(u, remember=form.remember.data)
 
         next_page = request.args.get("next")
-        if not next_page or url_parse(next_page).netloc != "":
+        if not next_page or urlparse(next_page).netloc != "":
             next_page = url_for("index")
         return redirect(next_page)
 
