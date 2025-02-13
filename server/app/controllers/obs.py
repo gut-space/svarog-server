@@ -7,7 +7,7 @@ from math import floor
 from app.utils import strfdelta
 from flask_login import current_user
 
-from tletools import TLE
+# from tletools import TLE
 from astropy import units as u
 import os
 
