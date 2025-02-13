@@ -4,6 +4,10 @@
 #
 #    pip-compile requirements.in
 #
+astropy==7.0.1
+    # via -r requirements.in
+astropy-iers-data==0.2025.2.10.0.33.26
+    # via astropy
 blinker==1.9.0
     # via flask
 certifi==2025.1.31
@@ -48,13 +52,16 @@ matplotlib==3.10.0
     # via -r requirements.in
 numpy==2.2.3
     # via
+    #   astropy
     #   contourpy
     #   matplotlib
     #   orbit-predictor
+    #   pyerfa
 orbit-predictor==1.15.0
     # via -r requirements.in
 packaging==24.2
     # via
+    #   astropy
     #   marshmallow
     #   matplotlib
     #   webargs
@@ -62,6 +69,8 @@ pillow==11.1.0
     # via matplotlib
 psycopg2-binary==2.9.10
     # via -r requirements.in
+pyerfa==2.0.1.5
+    # via astropy
 pyparsing==3.2.1
     # via matplotlib
 python-crontab==3.2.0
@@ -71,6 +80,8 @@ python-dateutil==2.9.0.post0
     #   -r requirements.in
     #   matplotlib
     #   python-crontab
+pyyaml==6.0.2
+    # via astropy
 requests==2.32.3
     # via orbit-predictor
 sgp4==2.23

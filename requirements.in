@@ -1,3 +1,4 @@
+astropy
 Flask
 flask_wtf
 flask_login
