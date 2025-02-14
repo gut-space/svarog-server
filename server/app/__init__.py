@@ -1,9 +1,6 @@
 from app.utils import get_footer
 
-try:
-    from configparser import ConfigParser, NoSectionError, NoOptionError
-except ImportError:
-    from ConfigParser import ConfigParser, NoSectionError, NoOptionError
+from configparser import ConfigParser, NoSectionError, NoOptionError
 
 import os
 from flask import Flask
@@ -25,7 +22,11 @@ try:
 
     config = ConfigParser()
     config.optionxform = str
-    config.read(ini_path)
+
+    loaded_configs = config.read(ini_path)
+
+    if not loaded_configs:
+        raise Exception(f"Unable to read config file from {ini_path}")
 
     for key, value in config.defaults().items():
         app.config[key] = value
