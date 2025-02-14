@@ -56,7 +56,7 @@
     <dl>
         <dt class="param">Orbit overview</dt><dd>{{ orbit.overview }}</dd>
         <dt class="param">Inclination <i>i</i></dt><dd> {{ orbit.inc }}</dd>
-        <dt class="param">Major semi-axis <i>a</i></dt><dd>{{ "%4.1f %s" % (orbit.a.value, orbit.a.unit) }}</dd>
+        <dt class="param">Major semi-axis <i>a</i></dt><dd>{{ "%4.1f km" % (orbit.a) }}</dd>
         <dt class="param">Eccentricity <i>e</i></dt><dd>{{ orbit.ecc }}</dd>
         <dt class="param">Apogee</dt><dd> {{ orbit.r_a}} </dd>
         <dt class="param">Perigee</dt><dd> {{ orbit.r_p}} </dd>
