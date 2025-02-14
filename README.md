@@ -1,6 +1,8 @@
-[![Pylint station](https://github.com/gut-space/svarog/actions/workflows/pylint-station.yml/badge.svg)](https://github.com/gut-space/svarog/actions/workflows/pylint-station.yml)
-[![Station tests](https://github.com/gut-space/svarog/actions/workflows/pytest-station.yml/badge.svg)](https://github.com/gut-space/svarog/actions/workflows/pytest-station.yml)
-[![Server tests](https://github.com/gut-space/svarog/actions/workflows/test-server.yml/badge.svg)](https://github.com/gut-space/svarog/actions/workflows/test-server.yml)
+[![Python 3.11](https://github.com/gut-space/svarog-server/actions/workflows/pytest-3.11.yml/badge.svg)](https://github.com/gut-space/svarog-server/actions/workflows/pytest-3.11.yml)
+[![Python 3.12](https://github.com/gut-space/svarog-server/actions/workflows/pytest-3.12.yml/badge.svg)](https://github.com/gut-space/svarog-server/actions/workflows/pytest-3.12.yml)
+[![Pylint](https://github.com/gut-space/svarog-server/actions/workflows/pylint.yml/badge.svg)](https://github.com/gut-space/svarog-server/actions/workflows/pylint.yml)
+[![Flake8](https://github.com/gut-space/svarog-server/actions/workflows/flake8.yml/badge.svg)](https://github.com/gut-space/svarog-server/actions/workflows/flake8.yml)
+[![CodeQL](https://github.com/gut-space/svarog-server/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/gut-space/svarog-server/actions/workflows/github-code-scanning/codeql.yml)
 
 <img align="right" width="128" height="128" src="https://github.com/gut-space/svarog/blob/master/doc/logo.png">
 
