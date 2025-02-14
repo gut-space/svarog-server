@@ -95,10 +95,6 @@ def parse_tle(tle1: str, tle2: str, name: str) -> dict:
     # Get orbital elements
     elements = orb.orbit_elements
 
-    print(f"#### elements: {elements}")
-    from pprint import pprint
-    pprint(vars(elements))
-
     # Calculate period in minutes and seconds
     period_minutes = elements.period  # Period is returned in minutes
     m = floor(period_minutes)
