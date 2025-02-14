@@ -8,6 +8,7 @@ from app.utils import strfdelta
 from flask_login import current_user
 
 # from tletools import TLE
+from pyorbital.orbital import Orbital, A as EARTH_RADIUS
 from astropy import units as u
 import os
 
@@ -59,40 +60,67 @@ def obs(obs_id: ObservationId = None, limit_and_offset=None):
                             sat_name=satellite["sat_name"], item_count=files_count, orbit=orbit, station=station, is_owner=owner)
 
 
+def calculate_orbit_parameters(perigee: float, eccentricity: float, earth_radius: float = 0):
+    """
+    Calculates the semi-major axis and apogee.
+
+    Parameters:
+        perigee (float): The perigee distance. If using altitude, pass the altitude.
+        eccentricity (float): The orbit's eccentricity.
+        earth_radius (float): (Optional) Earth's radius to add to the altitude.
+                                Defaults to 0 if perigee is already the distance from the center.
+
+    Returns:
+        tuple: (semi_major_axis, apogee)
+    """
+    # If perigee is provided as altitude, convert it to distance from the center
+    r_p = perigee + earth_radius
+
+    # Calculate the semi-major axis using r_p = a (1 - e)
+    a = r_p / (1 - eccentricity)
+
+    # Calculate the apogee: r_a = a (1 + e)
+    r_a = a * (1 + eccentricity)
+
+    return a, r_a
+
+
 def parse_tle(tle1: str, tle2: str, name: str) -> dict:
     """ Parses orbital data in TLE format and returns a dictionary with printable orbital elements
         and other parameters."""
 
-    # First, parse the TLE lines. We don't care about the name.
-    t = TLE.from_lines(line1=tle1, line2=tle2, name=name)
+    # Create Orbital object from TLE data
+    orb = Orbital(name, line1=tle1, line2=tle2)
 
-    # Now convert it to poliastro orbit. All the data is there, but we want to
-    # make it easier to read, format it nicely and do some basic calculations.
-    # Hence the orb dictionary.
-    o = t.to_orbit()
+    # Get orbital elements
+    elements = orb.orbit_elements
 
-    RE = o.attractor.R  # Earth radius
-    r_a = o.r_a - RE  # Calculate apogee and perigee as altitude above Earth surface,
-    r_p = o.r_p - RE  # rather than as distance from barycenter.
+    print(f"#### elements: {elements}")
+    from pprint import pprint
+    pprint(vars(elements))
 
-    m = floor(o.period.to(u.s).value / 60)
-    s = (o.period.to(u.s) - m * 60 * u.s).value
+    # Calculate period in minutes and seconds
+    period_minutes = elements.period  # Period is returned in minutes
+    m = floor(period_minutes)
+    s = (period_minutes - m) * 60
 
-    # Now make the parameters easier to read (cut unnecessary digits after comma, show altitude, etc)
-    orb = {}
-    orb["overview"] = repr(o)
-    orb["inc"] = "%4.1f %s" % (o.inc.value, o.inc.unit)
-    orb["a"] = o.a
-    orb["ecc"] = o.ecc
-    orb["r_a"] = "%4.1f %s (%4.1f %s above surface)" % (o.r_a.value, o.r_a.unit, r_a.value, r_a.unit)
-    orb["r_p"] = "%4.1f %s (%4.1f %s above surface)" % (o.r_p.value, o.r_p.unit, r_p.value, r_p.unit)
-    orb["raan"] = "%4.1f %s" % (o.raan.value, o.raan.unit)
-    orb["period"] = "%4.0f %s (%dm %ds)" % (o.period.value, o.period.unit, m, s)
+    # Calculate apogee and perigee (in km)
+    perigee = float(elements.perigee) # Already in km above Earth's surface
+    semi_major, apogee = calculate_orbit_parameters(perigee, elements.excentricity, EARTH_RADIUS)
 
-    # Let's convert epoch to something more pleasantly readable.
-    orb["epoch"] = o.epoch.strftime("%Y-%m-%d %H:%M:%S") + " UTC"
+    # Format the orbital parameters
+    orb_dict = {}
+    orb_dict["overview"] = f"Satellite {name} at {apogee:.1f}km x {perigee:.1f}km"
+    orb_dict["inc"] = f"{elements.inclination:.1f} deg"
+    orb_dict["ecc"] = elements.excentricity
+    orb_dict["a"] = semi_major   # in km above the center of the earth
+    orb_dict["r_a"] = f"{(apogee - EARTH_RADIUS):.1f} km above surface"
+    orb_dict["r_p"] = f"{(perigee):.1f} km above surface"
+    orb_dict["raan"] = f"{elements.right_ascension:.1f} deg"
+    orb_dict["period"] = f"{period_minutes:.1f} min ({m}m {int(s)}s)"
+    orb_dict["epoch"] = str(elements.epoch) + " UTC"  # orb.tle.epoch.strftime("%Y-%m-%d %H:%M:%S") + " UTC"
 
-    return orb
+    return orb_dict
 
 
 def human_readable_obs(obs: Observation) -> Observation:
@@ -107,6 +135,9 @@ def human_readable_obs(obs: Observation) -> Observation:
         tca_correction = " (corrected, the original observation record incorrectly says TCA = AOS)"
 
     aos_tca_duration = obs["tca"] - obs["aos"]
+
+    if "config" in obs and obs['config'] and "recipe" in obs["config"] and "<function execute" in obs["config"]["recipe"]:
+        obs["config"]["recipe"] = "unknown (not recorded properly)"
 
     obs.aos = obs["aos"].strftime("%Y-%m-%d %H:%M:%S")
     obs.tca = obs["tca"].strftime("%Y-%m-%d %H:%M:%S") + ", " + strfdelta(aos_tca_duration, fmt="{M:02}m {S:02}s since AOS") + tca_correction
