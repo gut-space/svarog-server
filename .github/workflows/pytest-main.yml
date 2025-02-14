@@ -4,10 +4,13 @@
 name: pytest with Postgres
 
 on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+  # workflow_call is a required field of the "on" property,
+  # when intending to use the workflow as a reusable workflow
+  workflow_call:
+    inputs:
+      python-version:
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -43,23 +46,25 @@ jobs:
     steps:
       # Downloads a copy of the code in your repository before running CI tests
       - name: Check out repository code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+      - name: Set up Python ${{ inputs.python-version }}
+        uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: ${{ inputs.python-version }}
           cache: 'pip'
           cache-dependency-path: 'requirements.txt'
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: |
+          pip install -r requirements.txt
+          pip install pytest
 
-      - name: Setup Postgres database
+      - name: Setup configs
         run: |
           cp server/tests/.svarog.ini.github server/svarog.ini
           mkdir -p ~/.config/svarog-gut
-      - name: Perform unit tests
+      - name: Run unit tests
         run: |
           cd server
-          python -m unittest discover
+          python -m pytest -s -v
