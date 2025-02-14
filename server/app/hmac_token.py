@@ -105,7 +105,7 @@ def get_authorization_header_value(id_: str, secret: Union[bytes, bytearray], bo
     Valid Authorization HTTP header value.
     '''
     if date is None:
-        date = datetime.datetime.utcnow()
+        date = datetime.datetime.now(datetime.timezone.utc)
     token = get_token(id_, secret, body, date)
     return "%s %s" % (AUTHORIZATION_ALGORITHM, token)
 
@@ -159,7 +159,7 @@ def validate_token(token: str, secret: bytes, body: Dict, check_date=None):
     id_, create_date, sig = parse_token(token)
 
     if check_date is None:
-        check_date = datetime.datetime.utcnow()
+        check_date = datetime.datetime.now(datetime.timezone.utc)
     delta = abs(check_date - create_date)
     if delta > SIG_LIFETIME:
         return "Token expired", id_
