@@ -1,0 +1,12 @@
+name: pytest-3.12
+on: push
+
+jobs:
+  ubuntu-latest-build:
+    uses: ./.github/workflows/pytest-main.yml
+    with:
+      python-version: 3.12
+
+permissions:
+  contents: read
+  pull-requests: write
