@@ -22,7 +22,7 @@ cycler==0.12.1
     # via matplotlib
 defusedxml==0.7.1
     # via pyorbital
-flask==3.1.0
+flask==3.1.1
     # via
     #   -r requirements.in
     #   flask-login
@@ -45,6 +45,7 @@ kiwisolver==1.4.8
     # via matplotlib
 markupsafe==3.0.2
     # via
+    #   flask
     #   jinja2
     #   werkzeug
     #   wtforms
