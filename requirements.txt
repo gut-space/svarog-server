@@ -89,7 +89,7 @@ python-dateutil==2.9.0.post0
     #   python-crontab
 pyyaml==6.0.2
     # via astropy
-requests==2.32.3
+requests==2.32.4
     # via
     #   orbit-predictor
     #   pyorbital
