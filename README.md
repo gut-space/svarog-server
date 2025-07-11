@@ -12,22 +12,7 @@ Project founders: [Sławek Figiel](https://github.com/fivitti) and [Tomek Mrugal
 
 # Project status
 
-As of Feb 2021, the following features are working:
-
-- WiMo TA-1 antenna, SDR and RPi4 are working
-- Automated reception and transmission decoding for NOAA-15, NOAA-18 and NOAA-19 satellites (APT)
-- Support for Meteor M2 transmissions (LRPT)
-- Transmissions are decoded and uploaded automatically to our content server (see https://svarog.space)
-- Automated updates for the server and station
-- Orbital TLE data is recorded and prestend in several formats (native TLE, easy to understand orbital parameters etc.)
-- Pass over charts (azimuth/elevation)
-
-Work in progress and plans for the near future:
-
-- quality assessment for decoded images
-- user management
-- georeferencing
-- telemetry reception
+As of June 2025, the project is in the process of being revived after couple years or dormancy. Stay tuned.
 
 # Documentation
 
