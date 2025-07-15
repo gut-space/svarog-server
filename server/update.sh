@@ -34,13 +34,26 @@ git rev-parse HEAD > commit.txt
 
 # Run the installation script
 VENV=$PWD/venv/bin/activate
+
+# Create virtual environment if it doesn't exist
+if [ ! -d "venv" ]; then
+    echo "Creating virtual environment..."
+    python3 -m venv venv
+fi
+
 echo "Enabling venv at $VENV"
 
-# We don't care that venv activation scritp will not be checked.
+# We don't care that venv activation script will not be checked.
 # shellcheck disable=SC1090
 . "$VENV"
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Install the server
 python setup.py install
 
+# Restart the server
 # Restart web server (make sure this corresponds to the actual server you're running)
 #sudo systemctl restart apache2
 sudo systemctl restart unit

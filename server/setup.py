@@ -8,7 +8,7 @@ import sys
 from setuptools import setup, find_packages
 
 # STEP 1: install python packages
-REQUIREMENTS = [i.strip() for i in open("requirements.txt").readlines()]
+REQUIREMENTS = [i.strip() for i in open("../requirements.txt").readlines()]
 
 setup(name='svarog-server',
       version='1.0',
