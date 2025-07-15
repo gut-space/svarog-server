@@ -48,13 +48,13 @@ echo "Enabling venv at $VENV"
 . "$VENV"
 
 # Install dependencies
-pip install -r requirements.txt
+pip install -r ../requirements.txt
 
 # Install the server
 python setup.py install
 
-# Restart the server
-# Restart web server (make sure this corresponds to the actual server you're running)
-#sudo systemctl restart apache2
-sudo systemctl restart unit
+# Restart the server (make sure this corresponds to the actual server you're running)
+# sudo systemctl restart apache2
+# sudo systemctl restart unit
+sudo systemctl restart gunicorn-svarog
 sudo systemctl restart nginx
