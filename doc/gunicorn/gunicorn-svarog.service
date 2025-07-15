@@ -1,0 +1,22 @@
+[Unit]
+Description=Gunicorn instance for Svarog
+After=network.target
+
+[Service]
+User=svarog
+Group=svarog
+WorkingDirectory=/home/svarog/devel/svarog-server/server
+Environment="PATH=/home/svarog/devel/svarog-server/server/venv"
+
+# If you want to enable TLS directly in the gunicorn, use the following:
+#  --keyfile /home/svarog/tls/privkey.pem --certfile /home/svarog/tls/cert.pem \
+ExecStart=/home/svarog/devel/svarog-server/server/venv/bin/gunicorn \
+  --access-logfile /home/svarog/logs/access.log --error-logfile /home/svarog/logs/error.log \
+  --workers 1 --bind 127.0.0.1:5002 app:app
+ExecReload=/bin/kill -s HUP $MAINPID
+KillMode=mixed
+TimeoutStopSec=5
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
