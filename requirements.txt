@@ -31,7 +31,7 @@ flask-login==0.6.3
     # via -r requirements.in
 flask-wtf==1.2.2
     # via -r requirements.in
-fonttools==4.56.0
+fonttools==4.61.0
     # via matplotlib
 idna==3.10
     # via requests
