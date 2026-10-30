@@ -10,7 +10,7 @@ astropy-iers-data==0.2025.2.10.0.33.26
     # via astropy
 blinker==1.9.0
     # via flask
-certifi==2025.1.31
+certifi==2026.10.18
     # via requests
 charset-normalizer==3.4.1
     # via requests
